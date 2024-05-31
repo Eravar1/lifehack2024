@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"../util"
+	"github.com/Eravar1/lifehack2024/util"
 	"github.com/fsnotify/fsnotify"
 )
 

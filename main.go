@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"./monitoring"
-	"./ui"
+	"github.com/Eravar1/lifehack2024/monitoring"
+	"github.com/Eravar1/lifehack2024/ui"
 	"github.com/joho/godotenv"
 )
 
