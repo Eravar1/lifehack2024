@@ -5,12 +5,51 @@ import (
 	"log"
 	"os"
 	"strings"
+	"syscall"
+	"unsafe"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/joho/godotenv"
 	"github.com/lxn/walk"
 	. "github.com/lxn/walk/declarative"
+	"golang.org/x/sys/windows"
 )
+
+var (
+	kernel32        = syscall.NewLazyDLL("kernel32.dll")
+	procCreateFileW = kernel32.NewProc("CreateFileW")
+	procReadFile    = kernel32.NewProc("ReadFile")
+	procWriteFile   = kernel32.NewProc("WriteFile")
+	procCloseHandle = kernel32.NewProc("CloseHandle")
+)
+
+func CreateFile(
+	name string,
+	access uint32,
+	shareMode uint32,
+	securityAttributes *syscall.SecurityAttributes,
+	creationDisposition uint32,
+	flagsAndAttributes uint32,
+	templateFile windows.Handle,
+) (windows.Handle, error) {
+	pName, err := syscall.UTF16PtrFromString(name)
+	if err != nil {
+		return windows.InvalidHandle, err
+	}
+	handle, _, err := procCreateFileW.Call(
+		uintptr(unsafe.Pointer(pName)),
+		uintptr(access),
+		uintptr(shareMode),
+		uintptr(unsafe.Pointer(securityAttributes)),
+		uintptr(creationDisposition),
+		uintptr(flagsAndAttributes),
+		uintptr(templateFile),
+	)
+	if handle == uintptr(windows.InvalidHandle) {
+		return windows.InvalidHandle, err
+	}
+	return windows.Handle(handle), nil
+}
 
 func main() {
 	// fsnotify watcher start
