@@ -21,7 +21,7 @@ func main() {
 				Text: "Welcome to the Ransomware Detection App!",
 			},
 			PushButton{
-				Text:      "Detect Ransomware",
+				Text:      "Clickable Button",
 				OnClicked: mw.detectRansomware,
 			},
 		},
@@ -41,6 +41,6 @@ type MyMainWindow struct {
 // Define a method to handle the "Detect Ransomware" button click event
 func (mw *MyMainWindow) detectRansomware() {
 	// Placeholder function for ransomware detection logic
-	log.Println("Ransomware detection initiated...")
+	log.Println("Button clicked")
 	// Implement your ransomware detection logic here
 }
