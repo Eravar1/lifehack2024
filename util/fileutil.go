@@ -29,12 +29,12 @@ var (
 	anomalyThreshold = 1000
 )
 
-func CreateFile(name string, access uint32, shareMode uint32, securityAttributes *syscall.SecurityAttributes, creationDisposition uint32, flagsAndAttributes uint32, templateFile windows.Handle) (windows.Handle, error) {
-	pName, err := syscall.UTF16PtrFromString(name)
+func CreateFile(name string, access, shareMode, creationDisposition, flagsAndAttributes uint32) (windows.Handle, error) {
+	pName, err := syscall.UTF16FromString(name)
 	if err != nil {
 		return windows.InvalidHandle, err
 	}
-	handle, _, err := procCreateFileW.Call(uintptr(unsafe.Pointer(pName)), uintptr(access), uintptr(shareMode), uintptr(unsafe.Pointer(securityAttributes)), uintptr(creationDisposition), uintptr(flagsAndAttributes), uintptr(templateFile))
+	handle, _, err := procCreateFileW.Call(uintptr(unsafe.Pointer(&pName[0])), uintptr(access), uintptr(shareMode), 0, uintptr(creationDisposition), uintptr(flagsAndAttributes), 0)
 	if handle == uintptr(windows.InvalidHandle) {
 		return windows.InvalidHandle, err
 	}
