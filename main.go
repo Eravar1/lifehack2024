@@ -16,5 +16,6 @@ func main() {
 
 	// Start the monitoring and UI components
 	go monitoring.Start()
+	monitoring.DemoCreateFile()
 	ui.Start()
 }
